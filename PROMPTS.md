@@ -34,7 +34,7 @@ The Maven project compiled successfully after removing the Lombok dependency and
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -66,7 +66,7 @@ Maven compiled the project successfully and JWT authentication worked during log
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -94,7 +94,7 @@ Maven compilation succeeded and the login endpoint returned the JWT and user inf
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -132,7 +132,7 @@ This demonstrated immediate revocation.
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -164,7 +164,7 @@ The refused attempt appeared in the audit trail.
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -196,7 +196,7 @@ The backend compiled successfully after correcting the file location.
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -226,7 +226,7 @@ Maven discovered and executed the test successfully.
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -256,7 +256,7 @@ The Vite React development server started successfully on localhost.
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -292,7 +292,7 @@ Spring Boot subsequently started successfully on port 8080.
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -328,7 +328,7 @@ The backend successfully created the JWT encoder/decoder using the environment-p
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -360,7 +360,7 @@ The application successfully connected to PostgreSQL and Spring Boot started nor
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -394,7 +394,7 @@ The security test additionally checks that the JDBC URL begins with `jdbc:h2:` b
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
@@ -422,7 +422,7 @@ JWT establishes identity, while current database state determines whether that i
 
 ### Commit
 
-Commit link will be added after the repository is published.
+https://github.com/kusumaedara517-sketch/TrustVault/commit/b43024b
 
 ---
 
