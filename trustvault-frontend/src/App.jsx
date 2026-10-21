@@ -227,12 +227,9 @@ function App() {
       setLoading(true);
       setMessage("");
 
-      const response = await fetch(
-        `${API}/api/admin/permissions`,
-        {
-          headers: authHeaders(),
-        }
-      );
+      const response = await fetch(`${API}/api/admin/permissions`, {
+        headers: authHeaders(),
+      });
 
       if (response.status === 401) {
         handleLogout();
@@ -315,8 +312,7 @@ function App() {
       setCategory("");
       setMessage("Document uploaded successfully!");
 
-      const fileInput =
-        document.getElementById("document-file");
+      const fileInput = document.getElementById("document-file");
 
       if (fileInput) {
         fileInput.value = "";
@@ -381,9 +377,7 @@ function App() {
       );
 
       if (!response.ok) {
-        setMessage(
-          (await response.text()) || "Download failed"
-        );
+        setMessage((await response.text()) || "Download failed");
         return;
       }
 
@@ -423,6 +417,8 @@ function App() {
     }
 
     try {
+      setMessage("");
+
       const response = await fetch(
         `${API}/api/documents/${doc.id}`,
         {
@@ -460,18 +456,13 @@ function App() {
     }
 
     try {
-      const response = await fetch(
-        `${API}/api/documents/${doc.id}`,
-        {
-          method: "DELETE",
-          headers: authHeaders(),
-        }
-      );
+      const response = await fetch(`${API}/api/documents/${doc.id}`, {
+        method: "DELETE",
+        headers: authHeaders(),
+      });
 
       if (!response.ok) {
-        setMessage(
-          (await response.text()) || "Delete failed"
-        );
+        setMessage((await response.text()) || "Delete failed");
         return;
       }
 
@@ -501,13 +492,9 @@ function App() {
       return;
     }
 
-    const permission =
-      permissionInput.trim().toUpperCase();
+    const permission = permissionInput.trim().toUpperCase();
 
-    if (
-      permission !== "READ" &&
-      permission !== "EDIT"
-    ) {
+    if (permission !== "READ" && permission !== "EDIT") {
       setMessage("Permission must be READ or EDIT");
       return;
     }
@@ -523,15 +510,13 @@ function App() {
           },
           body: JSON.stringify({
             email: targetEmail.trim(),
-            permission: permission,
+            permission,
           }),
         }
       );
 
       if (!response.ok) {
-        setMessage(
-          (await response.text()) || "Share failed"
-        );
+        setMessage((await response.text()) || "Share failed");
         return;
       }
 
@@ -565,15 +550,11 @@ function App() {
       );
 
       if (!response.ok) {
-        setMessage(
-          (await response.text()) || "Revoke failed"
-        );
+        setMessage((await response.text()) || "Revoke failed");
         return;
       }
 
-      setMessage(
-        `Access revoked from ${targetEmail.trim()}`
-      );
+      setMessage(`Access revoked from ${targetEmail.trim()}`);
     } catch (error) {
       console.error(error);
       setMessage("Revoke failed");
@@ -585,18 +566,13 @@ function App() {
       <>
         <section className="welcome-section">
           <h2>Document Dashboard</h2>
-          <p>
-            Upload, manage and securely share your documents.
-          </p>
+          <p>Upload, manage and securely share your documents.</p>
         </section>
 
         <section className="dashboard-card">
           <h3>Upload Document</h3>
 
-          <form
-            className="upload-form"
-            onSubmit={handleUpload}
-          >
+          <form className="upload-form" onSubmit={handleUpload}>
             <input
               id="document-file"
               type="file"
@@ -610,9 +586,7 @@ function App() {
               type="text"
               placeholder="Category e.g. Academic"
               value={category}
-              onChange={(e) =>
-                setCategory(e.target.value)
-              }
+              onChange={(e) => setCategory(e.target.value)}
             />
 
             <button type="submit" disabled={loading}>
@@ -624,10 +598,7 @@ function App() {
         <section className="dashboard-card">
           <h3>Search Documents</h3>
 
-          <form
-            className="search-form"
-            onSubmit={handleSearch}
-          >
+          <form className="search-form" onSubmit={handleSearch}>
             <select
               value={searchType}
               onChange={(e) => {
@@ -642,16 +613,10 @@ function App() {
             </select>
 
             <input
-              type={
-                searchType === "date"
-                  ? "date"
-                  : "text"
-              }
+              type={searchType === "date" ? "date" : "text"}
               placeholder="Search..."
               value={searchValue}
-              onChange={(e) =>
-                setSearchValue(e.target.value)
-              }
+              onChange={(e) => setSearchValue(e.target.value)}
             />
 
             <button type="submit">Search</button>
@@ -669,9 +634,7 @@ function App() {
         <section className="dashboard-card">
           <div className="documents-heading">
             <h3>Accessible Documents</h3>
-            <span>
-              {documents.length} document(s)
-            </span>
+            <span>{documents.length} document(s)</span>
           </div>
 
           {documents.length === 0 ? (
@@ -686,6 +649,7 @@ function App() {
                     <th>File Name</th>
                     <th>Category</th>
                     <th>Owner</th>
+                    <th>Permission</th>
                     <th>Date</th>
                     <th>Actions</th>
                   </tr>
@@ -694,14 +658,19 @@ function App() {
                 <tbody>
                   {documents.map((doc) => {
                     const isOwner =
+                      doc.permission === "OWNER" ||
                       doc.owner?.toLowerCase() ===
-                      currentEmail?.toLowerCase();
+                        currentEmail?.toLowerCase();
+
+                    const canEdit =
+                      isOwner || doc.permission === "EDIT";
 
                     return (
                       <tr key={doc.id}>
                         <td>{doc.filename}</td>
                         <td>{doc.category}</td>
                         <td>{doc.owner}</td>
+                        <td>{doc.permission || "-"}</td>
 
                         <td>
                           {doc.createdAt
@@ -715,47 +684,39 @@ function App() {
                           <div className="action-buttons">
                             <button
                               className="small-button"
-                              onClick={() =>
-                                handleDownload(doc)
-                              }
+                              onClick={() => handleDownload(doc)}
                             >
                               Download
                             </button>
 
-                            <button
-                              className="small-button"
-                              onClick={() =>
-                                handleEdit(doc)
-                              }
-                            >
-                              Edit
-                            </button>
+                            {canEdit && (
+                              <button
+                                className="small-button"
+                                onClick={() => handleEdit(doc)}
+                              >
+                                Edit
+                              </button>
+                            )}
 
                             {isOwner && (
                               <>
                                 <button
                                   className="small-button"
-                                  onClick={() =>
-                                    handleShare(doc)
-                                  }
+                                  onClick={() => handleShare(doc)}
                                 >
                                   Share
                                 </button>
 
                                 <button
                                   className="small-button secondary-button"
-                                  onClick={() =>
-                                    handleRevoke(doc)
-                                  }
+                                  onClick={() => handleRevoke(doc)}
                                 >
                                   Revoke
                                 </button>
 
                                 <button
                                   className="small-button delete-button"
-                                  onClick={() =>
-                                    handleDelete(doc)
-                                  }
+                                  onClick={() => handleDelete(doc)}
                                 >
                                   Delete
                                 </button>
@@ -781,8 +742,7 @@ function App() {
         <section className="welcome-section">
           <h2>Audit Logs</h2>
           <p>
-            Security and document activity recorded by
-            TrustVault.
+            Security and document activity recorded by TrustVault.
           </p>
         </section>
 
@@ -793,9 +753,7 @@ function App() {
           </div>
 
           {loading ? (
-            <p className="empty-text">
-              Loading audit logs...
-            </p>
+            <p className="empty-text">Loading audit logs...</p>
           ) : auditLogs.length === 0 ? (
             <p className="empty-text">
               No audit events found.
@@ -824,24 +782,13 @@ function App() {
                             ).toLocaleString()
                           : "-"}
                       </td>
-
                       <td>{log.userEmail}</td>
-
                       <td>{log.event}</td>
-
+                      <td>{log.documentId || "-"}</td>
                       <td>
-                        {log.documentId || "-"}
+                        {log.success ? "SUCCESS" : "REFUSED"}
                       </td>
-
-                      <td>
-                        {log.success
-                          ? "SUCCESS"
-                          : "REFUSED"}
-                      </td>
-
-                      <td>
-                        {log.details || "-"}
-                      </td>
+                      <td>{log.details || "-"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -858,17 +805,13 @@ function App() {
       <>
         <section className="welcome-section">
           <h2>Permission Overview</h2>
-          <p>
-            Current document access permissions.
-          </p>
+          <p>Current document access permissions.</p>
         </section>
 
         <section className="dashboard-card">
           <div className="documents-heading">
             <h3>Active Permissions</h3>
-            <span>
-              {permissions.length} permission(s)
-            </span>
+            <span>{permissions.length} permission(s)</span>
           </div>
 
           {loading ? (
@@ -892,29 +835,16 @@ function App() {
                 </thead>
 
                 <tbody>
-                  {permissions.map(
-                    (permission, index) => (
-                      <tr
-                        key={`${permission.documentId}-${permission.sharedWith}-${index}`}
-                      >
-                        <td>
-                          {permission.documentName}
-                        </td>
-
-                        <td>
-                          {permission.owner}
-                        </td>
-
-                        <td>
-                          {permission.sharedWith}
-                        </td>
-
-                        <td>
-                          {permission.permission}
-                        </td>
-                      </tr>
-                    )
-                  )}
+                  {permissions.map((permission, index) => (
+                    <tr
+                      key={`${permission.documentId}-${permission.sharedWith}-${index}`}
+                    >
+                      <td>{permission.documentName}</td>
+                      <td>{permission.owner}</td>
+                      <td>{permission.sharedWith}</td>
+                      <td>{permission.permission}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -935,7 +865,6 @@ function App() {
 
           <div className="user-area">
             {isAdmin && <span>ADMIN</span>}
-
             <span>{currentEmail}</span>
 
             <button onClick={handleLogout}>
@@ -1018,9 +947,7 @@ function App() {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
+                onChange={(e) => setEmail(e.target.value)}
               />
 
               <label>Password</label>
@@ -1029,18 +956,11 @@ function App() {
                 type="password"
                 placeholder="Enter your password"
                 value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
+                onChange={(e) => setPassword(e.target.value)}
               />
 
-              <button
-                type="submit"
-                disabled={loading}
-              >
-                {loading
-                  ? "Logging in..."
-                  : "Login"}
+              <button type="submit" disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
               </button>
             </form>
 
@@ -1060,9 +980,7 @@ function App() {
                 type="text"
                 placeholder="Enter your name"
                 value={name}
-                onChange={(e) =>
-                  setName(e.target.value)
-                }
+                onChange={(e) => setName(e.target.value)}
               />
 
               <label>Email</label>
@@ -1071,9 +989,7 @@ function App() {
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
+                onChange={(e) => setEmail(e.target.value)}
               />
 
               <label>Password</label>
@@ -1082,15 +998,10 @@ function App() {
                 type="password"
                 placeholder="Minimum 6 characters"
                 value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
+                onChange={(e) => setPassword(e.target.value)}
               />
 
-              <button
-                type="submit"
-                disabled={loading}
-              >
+              <button type="submit" disabled={loading}>
                 {loading
                   ? "Creating account..."
                   : "Register"}
@@ -1113,8 +1024,7 @@ function App() {
         )}
 
         <p className="security-text">
-          🔒 Your documents are protected with secure
-          access control
+          🔒 Your documents are protected with secure access control
         </p>
       </div>
     </div>

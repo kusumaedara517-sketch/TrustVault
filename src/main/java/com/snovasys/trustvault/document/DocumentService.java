@@ -198,6 +198,39 @@ public class DocumentService {
                 .toList();
     }
 
+    public String getPermissionForDocument(
+            UUID documentId,
+            String userEmail) {
+
+        User user = getActiveUser(userEmail);
+
+        Document document =
+                documentRepository.findById(documentId)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Document not found"
+                                ));
+
+        boolean isOwner =
+                document.getOwner()
+                        .getId()
+                        .equals(user.getId());
+
+        if (isOwner) {
+            return "OWNER";
+        }
+
+        return permissionRepository
+                .findByDocumentIdAndUserId(
+                        documentId,
+                        user.getId()
+                )
+                .map(permission ->
+                        permission.getPermission().name()
+                )
+                .orElse("NONE");
+    }
+
     public DocumentDownload download(
             UUID documentId,
             String userEmail) throws IOException {

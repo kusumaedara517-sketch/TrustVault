@@ -74,13 +74,15 @@ public class DocumentController {
             Authentication authentication) {
 
         try {
+            String currentUserEmail = authentication.getName();
+
             List<Document> documents =
                     documentService.searchDocuments(
                             name,
                             owner,
                             category,
                             date,
-                            authentication.getName()
+                            currentUserEmail
                     );
 
             List<Map<String, Object>> response =
@@ -120,6 +122,15 @@ public class DocumentController {
                                         document.getCreatedAt()
                                 );
 
+                                item.put(
+                                        "permission",
+                                        documentService
+                                                .getPermissionForDocument(
+                                                        document.getId(),
+                                                        currentUserEmail
+                                                )
+                                );
+
                                 return item;
                             })
                             .toList();
@@ -128,6 +139,10 @@ public class DocumentController {
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+
+        } catch (SecurityException e) {
+            return ResponseEntity.status(403)
                     .body(e.getMessage());
         }
     }
